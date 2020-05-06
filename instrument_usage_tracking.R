@@ -14,6 +14,8 @@ setwd(working_dir)
 # Define the input arguments
 #--------------------------------------------------------------------------------
 filename <- '2019-8 Zeiss_Epi.csv'
+todays_date <- format(Sys.Date(), "%d_%m_%Y")
+savename <- paste("instrument_usage_report_", "2019-8", ".xlsx", sep ='')
 
 # Microscopy Fees (Update as necessary)
 price_list <- c(
@@ -41,16 +43,16 @@ instrument_usage <- function(data_df, price_list){
   usage_report -- dataframe, of shape (num_obs, 4)
   payment_report -- dataframe, of shape (num_obs, 2)
   "
-  num_supervisors <- count(data_df, c("Supervisor", "ïZeissEpi"))
-  usage_report <- aggregate(Price ~ Supervisor + ïZeissEpi, data=data_df, sum)
+  # instrument <- as.name(names(data_df)[1])
+  usage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum)
   
   # calculate the number of hours spent per task
   # preallocate usage_hours vector
   usage_hours <- c()
   
   for (item in 1:length(price_list)){
-    if (names(price_list[item]) %in% usage_report$ïZeissEpi){
-      temp <-subset(usage_report, ïZeissEpi == names(price_list)[item])
+    if (names(price_list[item]) %in% usage_report$ZeissEpi){
+      temp <-subset(usage_report, ZeissEpi == names(price_list)[item])
       num_hours <- temp$Price / price_list[item]
       usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       usage_hours[is.nan(usage_hours)] <- 0
@@ -76,6 +78,7 @@ instrument_usage <- function(data_df, price_list){
 data_df <- read.csv(file=filename, header=TRUE, stringsAsFactors=FALSE)
 # remove nonalphanumeric characters from header names
 names(data_df) <- gsub("[^[:alnum:]///' ]", "", names(data_df))
+names(data_df)[1] <- substring(names(data_df)[1],2)
 # standardize supervisor names by removing any punctuations
 data_df$Supervisor <- gsub("[[:punct:]]", "", data_df$Supervisor)
 
@@ -93,9 +96,6 @@ addWorksheet(wb, "Payment Totals")
 
 writeData(wb, "Usage Report", usage_report)
 writeData(wb, "Payment Totals", payment_report)
-
-date <- format(Sys.Date(), "%d_%m_%Y")
-savename <- paste("instrument_usage_report_", date, ".xlsx", sep ='')
 
 saveWorkbook(wb, file=savename, overwrite=TRUE)
 
