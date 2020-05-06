@@ -1,5 +1,5 @@
 "
-Microscopy instrument usage tracking
+Microscopy Instrument Usage Tracking
 
 Written by Clara Tam
 Copyright (c) 2020
@@ -17,9 +17,13 @@ setwd(working_dir)
 #--------------------------------------------------------------------------------
 # Define the input arguments
 #--------------------------------------------------------------------------------
+# filename to import
 filename <- '2019-11 Confocal.csv'
-todays_date <- format(Sys.Date(), "%d_%m_%Y")
-savename <- paste("instrument_usage_report_", "Confocal_2019-11", ".xlsx", sep ='')
+# code to retrieve today's date
+# todays_date <- format(Sys.Date(), "%Y-%m")
+
+# output filename
+savename <- paste("2019-11_Confocal", "_usage_report", ".xlsx", sep ='')
 
 # Microscopy Fees (Update as necessary)
 price_list <- c(
@@ -48,7 +52,7 @@ instrument_usage <- function(data_df, price_list){
   payment_report -- dataframe, of shape (num_obs, 2)
   "
   if (names(data_df)[1] == "EpiCalcium"){
-  
+    # EpiCalcium instrument usage report
     usage_report <- aggregate(Price ~ Supervisor + EpiCalcium, data=data_df, sum) #edit instrument name as needed
     
     # calculate the number of hours spent per task
@@ -61,11 +65,12 @@ instrument_usage <- function(data_df, price_list){
         num_hours <- temp$Price / price_list[item]
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
         usage_hours[is.nan(usage_hours)] <- 0
-      }
-    }
-  } # end of if statement
+      }# end if
+    }# end for
+  }# end of if statement
   else if(names(data_df)[1] == "ZeissEpi"){
-    sage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum) #edit instrument name as needed
+    # ZeissEpi instrument usage report
+    usage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum) #edit instrument name as needed
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
@@ -77,11 +82,12 @@ instrument_usage <- function(data_df, price_list){
         num_hours <- temp$Price / price_list[item]
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
         usage_hours[is.nan(usage_hours)] <- 0
-      }
-    }
-  } # end of else if statement
+      }# end if
+    }# end for
+  }# end of else if statement
   else if(names(data_df)[1] == "Confocal"){
-    sage_report <- aggregate(Price ~ Supervisor + Confocal, data=data_df, sum) #edit instrument name as needed
+    # Confocal instrument usage report
+    usage_report <- aggregate(Price ~ Supervisor + Confocal, data=data_df, sum) #edit instrument name as needed
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
@@ -93,9 +99,9 @@ instrument_usage <- function(data_df, price_list){
         num_hours <- temp$Price / price_list[item]
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
         usage_hours[is.nan(usage_hours)] <- 0
-      }
-    }
-  }
+      }# end if
+    }# end for
+  }# end of else if statement
   
   
   # add hours to usage_report dataframe
