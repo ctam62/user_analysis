@@ -6,8 +6,22 @@ Microscopy instrument usage tracking
 # Setup working environment
 #--------------------------------------------------------------------------------
 # Set working directory
-setwd("D:/instrument_usage_tracking")
 working_dir <- getwd()
+print(working_dir)
+setwd(working_dir)
+
+#--------------------------------------------------------------------------------
+# Define the input arguments
+#--------------------------------------------------------------------------------
+filename <- '2019-8 Zeiss_Epi.csv'
+
+# Microscopy Fees (Update as necessary)
+price_list <- c(
+  "CHRIM Training" = 50, 
+  "CHRIM User" = 10, 
+  "Data Analysis" = 0, 
+  "CHRIM Full Service" = 50)
+#--------------------------------------------------------------------------------
 
 # import required library packages
 library(plyr)
@@ -58,19 +72,8 @@ instrument_usage <- function(data_df, price_list){
 # Main Script
 #--------------------------------------------------------------------------------
 
-# Define the input arguments
-#--------------------------------------------------------------------------------
-# Microscopy Fees (Update as necessary)
-price_list <- c(
-  "CHRIM Training" = 50, 
-  "CHRIM User" = 10, 
-  "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50)
-#--------------------------------------------------------------------------------
-
 # import excel file
-data_df <- read.csv(file='2019-8 Zeiss_Epi.csv', header=TRUE, 
-                    stringsAsFactors=FALSE)
+data_df <- read.csv(file=filename, header=TRUE, stringsAsFactors=FALSE)
 # remove nonalphanumeric characters from header names
 names(data_df) <- gsub("[^[:alnum:]///' ]", "", names(data_df))
 # standardize supervisor names by removing any punctuations
@@ -91,5 +94,8 @@ addWorksheet(wb, "Payment Totals")
 writeData(wb, "Usage Report", usage_report)
 writeData(wb, "Payment Totals", payment_report)
 
-saveWorkbook(wb, file="instrument_usage_reports.xlsx", overwrite=TRUE)
+date <- format(Sys.Date(), "%d_%m_%Y")
+savename <- paste("instrument_usage_report_", date, ".xlsx", sep ='')
+
+saveWorkbook(wb, file=savename, overwrite=TRUE)
 
