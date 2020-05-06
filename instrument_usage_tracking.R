@@ -1,21 +1,25 @@
 "
 Microscopy instrument usage tracking
 
+Written by Clara Tam
+Copyright (c) 2020
+Licensed under the MIT License (see LICENSE for details)
+
 "
 #--------------------------------------------------------------------------------
 # Setup working environment
 #--------------------------------------------------------------------------------
 # Set working directory
 working_dir <- getwd()
-print(working_dir)
+cat("Your working directory is set to:", working_dir)
 setwd(working_dir)
 
 #--------------------------------------------------------------------------------
 # Define the input arguments
 #--------------------------------------------------------------------------------
-filename <- '2019-8 Zeiss_Epi.csv'
+filename <- '2019-11 Epi&Calcium.csv'
 todays_date <- format(Sys.Date(), "%d_%m_%Y")
-savename <- paste("instrument_usage_report_", "2019-8", ".xlsx", sep ='')
+savename <- paste("instrument_usage_report_", "EpiCalcium_2019-11", ".xlsx", sep ='')
 
 # Microscopy Fees (Update as necessary)
 price_list <- c(
@@ -43,21 +47,56 @@ instrument_usage <- function(data_df, price_list){
   usage_report -- dataframe, of shape (num_obs, 4)
   payment_report -- dataframe, of shape (num_obs, 2)
   "
-  # instrument <- as.name(names(data_df)[1])
-  usage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum)
+  if (names(data_df)[1] == "EpiCalcium"){
   
-  # calculate the number of hours spent per task
-  # preallocate usage_hours vector
-  usage_hours <- c()
-  
-  for (item in 1:length(price_list)){
-    if (names(price_list[item]) %in% usage_report$ZeissEpi){
-      temp <-subset(usage_report, ZeissEpi == names(price_list)[item])
-      num_hours <- temp$Price / price_list[item]
-      usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
-      usage_hours[is.nan(usage_hours)] <- 0
+    usage_report <- aggregate(Price ~ Supervisor + EpiCalcium, data=data_df, sum) #edit instrument name as needed
+    
+    # calculate the number of hours spent per task
+    # preallocate usage_hours vector
+    usage_hours <- c()
+    
+    for (item in 1:length(price_list)){
+      if (names(price_list[item]) %in% usage_report$EpiCalcium){ #edit instrument name as needed
+        temp <-subset(usage_report, EpiCalcium == names(price_list)[item]) #edit instrument name as needed
+        num_hours <- temp$Price / price_list[item]
+        usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
+        usage_hours[is.nan(usage_hours)] <- 0
+      }
+    }
+  } # end of if statement
+  else if(names(data_df)[1] == "ZeissEpi"){
+    sage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum) #edit instrument name as needed
+    
+    # calculate the number of hours spent per task
+    # preallocate usage_hours vector
+    usage_hours <- c()
+    
+    for (item in 1:length(price_list)){
+      if (names(price_list[item]) %in% usage_report$ZeissEpi){ #edit instrument name as needed
+        temp <-subset(usage_report, ZeissEpi == names(price_list)[item]) #edit instrument name as needed
+        num_hours <- temp$Price / price_list[item]
+        usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
+        usage_hours[is.nan(usage_hours)] <- 0
+      }
+    }
+  } # end of else if statement
+  else if(names(data_df)[1] == "Confocal"){
+    sage_report <- aggregate(Price ~ Supervisor + Confocal, data=data_df, sum) #edit instrument name as needed
+    
+    # calculate the number of hours spent per task
+    # preallocate usage_hours vector
+    usage_hours <- c()
+    
+    for (item in 1:length(price_list)){
+      if (names(price_list[item]) %in% usage_report$Confocal){ #edit instrument name as needed
+        temp <-subset(usage_report, Confocal == names(price_list)[item]) #edit instrument name as needed
+        num_hours <- temp$Price / price_list[item]
+        usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
+        usage_hours[is.nan(usage_hours)] <- 0
+      }
     }
   }
+  
   
   # add hours to usage_report dataframe
   usage_report$Hours = usage_hours
