@@ -11,15 +11,15 @@ Licensed under the MIT License (see LICENSE for details)
 #--------------------------------------------------------------------------------
 # Set working directory
 working_dir <- getwd()
-cat("Your working directory is set to:", working_dir)
+cat("Your working directory is set to:", working_dir, "\n")
 setwd(working_dir)
 
 #--------------------------------------------------------------------------------
 # Define the input arguments
 #--------------------------------------------------------------------------------
-filename <- '2019-11 Epi&Calcium.csv'
+filename <- '2019-11 Confocal.csv'
 todays_date <- format(Sys.Date(), "%d_%m_%Y")
-savename <- paste("instrument_usage_report_", "EpiCalcium_2019-11", ".xlsx", sep ='')
+savename <- paste("instrument_usage_report_", "Confocal_2019-11", ".xlsx", sep ='')
 
 # Microscopy Fees (Update as necessary)
 price_list <- c(
@@ -137,4 +137,5 @@ writeData(wb, "Usage Report", usage_report)
 writeData(wb, "Payment Totals", payment_report)
 
 saveWorkbook(wb, file=savename, overwrite=TRUE)
+cat("\nFile:", savename, " has been created")
 
