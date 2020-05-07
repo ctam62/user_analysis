@@ -32,20 +32,20 @@ zeissepi_savename <- paste0(date, "_ZeissEpi", "_usage_report", ".xlsx")
 
 # Microscopy Fees (Update as necessary)
 confocal_price_list <- c(
-  "CHRIM Training" = 50, 
-  "CHRIM User" = 10, 
+  "CHRIM Training" = 75, 
+  "CHRIM User" = 50, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50)
 
 epicalcium_price_list <- c(
-  "CHRIM Training" = 50, 
-  "CHRIM User" = 10, 
+  "CHRIM Training" = 75, 
+  "CHRIM User" = 25, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50)
 
 zeissepi_price_list <- c(
-  "CHRIM Training" = 50, 
-  "CHRIM User" = 10, 
+  "CHRIM Training" = 75, 
+  "CHRIM User" = 25, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50)
 #--------------------------------------------------------------------------------
