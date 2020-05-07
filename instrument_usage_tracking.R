@@ -26,28 +26,37 @@ epicalcium_file <- paste(date, "Epi&Calcium.csv")
 zeissepi_file <- paste(date, "Zeiss_Epi.csv")
 
 # output filename
-confocal_savename <- paste0(date, "_Confocal", "_usage_report", ".xlsx")
-epicalcium_savename <- paste0(date, "_EpiCalcium", "_usage_report", ".xlsx")
-zeissepi_savename <- paste0(date, "_ZeissEpi", "_usage_report", ".xlsx")
+output_dir <- file.path(working_dir, paste0(date,"_reports"))
+if (!dir.exists(output_dir)){dir.create(output_dir)}
+
+confocal_savename <- paste0(output_dir,"/", date, "_Confocal", "_usage_report", ".xlsx")
+epicalcium_savename <- paste0(output_dir, "/", date, "_EpiCalcium", "_usage_report", ".xlsx")
+zeissepi_savename <- paste0(output_dir, "/", date, "_ZeissEpi", "_usage_report", ".xlsx")
 
 # Microscopy Fees (Update as necessary)
 confocal_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 50, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50)
+  "CHRIM Full Service" = 50,
+  "UofM User" = 75,
+  "External" = 150)
 
 epicalcium_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 25, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50)
+  "CHRIM Full Service" = 50,
+  "UofM User" = 30,
+  "External" = 60)
 
 zeissepi_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 25, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50)
+  "CHRIM Full Service" = 50,
+  "UofM User" = 30,
+  "External" = 60)
 #--------------------------------------------------------------------------------
 
 # import required library packages
