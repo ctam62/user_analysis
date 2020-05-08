@@ -18,7 +18,7 @@ setwd(working_dir)
 # Define the input arguments
 #--------------------------------------------------------------------------------
 # specify date of reports
-date <-"2020-3"
+date <-"2020-2"
 
 # csv files to import
 confocal_file <- paste(date, "Confocal.csv")
@@ -123,7 +123,7 @@ instrument_usage <- function(data_df, price_list){
     # Confocal instrument usage report
     
     # extract supversior and instrument columns  
-    usage_report <- subset(data_df, select=c("Supervisor", "Confocal", "Price"))
+    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "Confocal", "Price"))
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
@@ -136,12 +136,19 @@ instrument_usage <- function(data_df, price_list){
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
+    
+    # create usage_report dataframe with hours
+    temp_report$Hours <- usage_hours
+    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Confocal, data=temp_report, sum)
+    
+    # create user_report
+    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + Confocal, data=temp_report, sum)
   }# end if 
   else if (names(data_df)[1] == "EpiCalcium"){
     # EpiCalcium instrument usage report
     
     # extract supversior and instrument columns  
-    usage_report <- subset(data_df, select=c("Supervisor", "EpiCalcium", "Price"))  
+    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "EpiCalcium", "Price"))  
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
@@ -154,12 +161,19 @@ instrument_usage <- function(data_df, price_list){
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
+    
+    # create usage_report dataframe with hours
+    temp_report$Hours <- usage_hours
+    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + EpiCalcium, data=temp_report, sum)
+    
+    # create user_report
+    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + EpiCalcium, data=temp_report, sum)
   }# end else if
   else if(names(data_df)[1] == "ZeissEpi"){
     # ZeissEpi instrument usage report
       
     # extract supversior and instrument columns  
-    usage_report <- subset(data_df, select=c("Supervisor", "ZeissEpi", "Price")) 
+    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "ZeissEpi", "Price")) 
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
@@ -172,16 +186,20 @@ instrument_usage <- function(data_df, price_list){
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
-  }# end else if
     
-  # create usage_report dataframe with hours
-  usage_report$Hours <- usage_hours
+    # create usage_report dataframe with hours
+    temp_report$Hours <- usage_hours
+    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + ZeissEpi, data=temp_report, sum)
+    
+    # create user_report
+    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + ZeissEpi, data=temp_report, sum)
+  }# end else if
     
   # calculate total price for each supervisor
   payment_report <- aggregate(Price ~ Supervisor, data=data_df, sum)
   
   # create list to return multiple reports
-  return_list <- list(usage_report, payment_report)
+  return_list <- list(usage_report, user_report, payment_report)
 
   return(return_list)
 }
@@ -196,14 +214,18 @@ export_reports <- function(reports, savename){
   # convert individual reports back to dataframes
   usage_report <- data.frame(reports[1])
   usage_report <- usage_report[order(usage_report[,1]),] # sort df by supervisor
-  payment_report <- data.frame(reports[2])
+  user_report <- data.frame(reports[2])
+  user_report <- user_report[order(user_report[,1]),] # sort df by supervisor
+  payment_report <- data.frame(reports[3])
   
   # export reports
   wb <- createWorkbook()
-  addWorksheet(wb, "Usage Report")
+  addWorksheet(wb, "Instrument Usage Report")
+  addWorksheet(wb, "User Report")
   addWorksheet(wb, "Payment Totals")
   
-  writeData(wb, "Usage Report", usage_report)
+  writeData(wb, "Instrument Usage Report", usage_report)
+  writeData(wb, "User Report", user_report)
   writeData(wb, "Payment Totals", payment_report)
   
   saveWorkbook(wb, file=savename, overwrite=TRUE)
