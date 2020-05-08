@@ -18,7 +18,7 @@ setwd(working_dir)
 # Define the input arguments
 #--------------------------------------------------------------------------------
 # specify date of reports
-date <-"2019-11"
+date <-"2020-3"
 
 # csv files to import
 confocal_file <- paste(date, "Confocal.csv")
@@ -63,6 +63,7 @@ zeissepi_price_list <- c(
 library(plyr)
 library(stringr)
 library(openxlsx)
+library(lubridate)
 
 #--------------------------------------------------------------------------------
 # Functions
@@ -77,11 +78,33 @@ dataframe_preprocessing <- function(data_df){
   "
   # remove nonalphanumeric characters from header names
   names(data_df) <- gsub("[^[:alnum:]///' ]", "", names(data_df))
-  names(data_df)[1] <- substring(names(data_df)[1],2)
+  # names(data_df)[1] <- substring(names(data_df)[1],2)
   # standardize supervisor names by removing any punctuations
   data_df$Supervisor <- gsub("[[:punct:]]", "", data_df$Supervisor)
   
   return(data_df)
+}
+
+
+compute_timespent <-function(data_df){
+  "
+  Arguments:
+  data_df -- dataframe, of shape (num_obs, num_variables)
+  
+  Return:
+  num_hours -- numeric value
+  
+  "
+  # reformat Starttime and Finishtime
+  data_df$Starttime <- sub(".+? ", "", data_df$Starttime)
+  data_df$Finishtime <- sub(".+? ", "", data_df$Finishtime)
+  # extract time values
+  starttime <- as.numeric(hm(data_df$Starttime), units="hours")
+  endtime <- as.numeric(hm(data_df$Finishtime), units="hours")
+  # compute the difference
+  num_hours <- abs(endtime - starttime)
+  
+  return(num_hours)
 }
 
 
@@ -95,63 +118,68 @@ instrument_usage <- function(data_df, price_list){
   usage_report -- dataframe, of shape (num_obs, 4)
   payment_report -- dataframe, of shape (num_obs, 2)
   "
+  
   if(names(data_df)[1] == "Confocal"){
     # Confocal instrument usage report
-    usage_report <- aggregate(Price ~ Supervisor + Confocal, data=data_df, sum) #edit instrument name as needed
     
+    # extract supversior and instrument columns  
+    usage_report <- subset(data_df, select=c("Supervisor", "Confocal", "Price"))
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    
+      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% usage_report$Confocal){ #edit instrument name as needed
-        temp <-subset(usage_report, Confocal == names(price_list)[item]) #edit instrument name as needed
-        num_hours <- temp$Price / price_list[item]
+      if (names(price_list[item]) %in% data_df$Confocal){
+        # extract data for Confocal
+        temp <-subset(data_df, Confocal == names(price_list)[item])
+        num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
-        usage_hours[is.nan(usage_hours)] <- 0
-      }# end inner if
+      }# end if
     }# end for
-  }# end of outer if statement
+  }# end if 
   else if (names(data_df)[1] == "EpiCalcium"){
     # EpiCalcium instrument usage report
-    usage_report <- aggregate(Price ~ Supervisor + EpiCalcium, data=data_df, sum) #edit instrument name as needed
     
+    # extract supversior and instrument columns  
+    usage_report <- subset(data_df, select=c("Supervisor", "EpiCalcium", "Price"))  
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    
+      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% usage_report$EpiCalcium){ #edit instrument name as needed
-        temp <-subset(usage_report, EpiCalcium == names(price_list)[item]) #edit instrument name as needed
-        num_hours <- temp$Price / price_list[item]
+      if (names(price_list[item]) %in% data_df$EpiCalcium){
+        # extract data for EpiCalcium
+        temp <-subset(data_df, EpiCalcium == names(price_list)[item])
+        num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
-        usage_hours[is.nan(usage_hours)] <- 0
       }# end if
     }# end for
-  }# end of if statement
+  }# end else if
   else if(names(data_df)[1] == "ZeissEpi"){
     # ZeissEpi instrument usage report
-    usage_report <- aggregate(Price ~ Supervisor + ZeissEpi, data=data_df, sum) #edit instrument name as needed
-    
+      
+    # extract supversior and instrument columns  
+    usage_report <- subset(data_df, select=c("Supervisor", "ZeissEpi", "Price")) 
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    
+      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% usage_report$ZeissEpi){ #edit instrument name as needed
-        temp <-subset(usage_report, ZeissEpi == names(price_list)[item]) #edit instrument name as needed
-        num_hours <- temp$Price / price_list[item]
+      if (names(price_list[item]) %in% data_df$ZeissEpi){
+        # extract data for ZeissEpi
+        temp <-subset(data_df, ZeissEpi == names(price_list)[item])
+        num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
-        usage_hours[is.nan(usage_hours)] <- 0
       }# end if
     }# end for
-  }# end of else if statement
-  
-  # add hours to usage_report dataframe
-  usage_report$Hours = usage_hours
-  
+  }# end else if
+    
+  # create usage_report dataframe with hours
+  usage_report$Hours <- usage_hours
+    
   # calculate total price for each supervisor
-  payment_report <- aggregate(Price ~ Supervisor, data=usage_report, sum)
+  payment_report <- aggregate(Price ~ Supervisor, data=data_df, sum)
+  
   # create list to return multiple reports
   return_list <- list(usage_report, payment_report)
 
@@ -179,7 +207,7 @@ export_reports <- function(reports, savename){
   writeData(wb, "Payment Totals", payment_report)
   
   saveWorkbook(wb, file=savename, overwrite=TRUE)
-  cat("\nFile:", savename, " has been created")
+  cat("\nFile:", savename, " has been created\n")
 }
 
 #--------------------------------------------------------------------------------
@@ -192,35 +220,50 @@ export_reports <- function(reports, savename){
 # Conofocal Instrument
 if (file_test("-f", confocal_file)){
   # read csv file
-  confocal_data_df <- read.csv(file=confocal_file, header=TRUE, stringsAsFactors=FALSE)
+  confocal_df <- read.csv(file=confocal_file, header=TRUE, stringsAsFactors=FALSE)
   # preprocessing dataframe
-  confocal_data_df <- dataframe_preprocessing(confocal_data_df)
-  # retrieve reports from instrument_usage function
-  confocal_reports <- instrument_usage(confocal_data_df, confocal_price_list)
-  # export report
-  export_reports(confocal_reports, confocal_savename)
+  confocal_df <- dataframe_preprocessing(confocal_df)
+  # check if dataframe is empty
+  if (empty(confocal_df)){cat("\n", names(confocal_df)[1], 
+                              " has no data. Usage report was not created\n")
+    } else{
+    # retrieve reports from instrument_usage function
+    confocal_reports <- instrument_usage(confocal_df, confocal_price_list)
+    # export report
+    export_reports(confocal_reports, confocal_savename)
+  }# end else
 }# end if
 
 # Epi & Calcium Instrument
 if (file_test("-f", epicalcium_file)){
   # read csv file
-  epicalcium_data_df <- read.csv(file=epicalcium_file, header=TRUE, stringsAsFactors=FALSE)
+  epicalcium_df <- read.csv(file=epicalcium_file, header=TRUE, stringsAsFactors=FALSE)
   # preprocessing dataframe
-  epicalcium_data_df <- dataframe_preprocessing(epicalcium_data_df)
-  # retrieve reports from instrument_usage function
-  epicalcium_reports <- instrument_usage(epicalcium_data_df, epicalcium_price_list)
-  # export report
-  export_reports(epicalcium_reports, epicalcium_savename)
+  epicalcium_df <- dataframe_preprocessing(epicalcium_df)
+  # check if dataframe is empty
+  if (empty(epicalcium_df)){cat("\n", names(epicalcium_df)[1], 
+                                " has no data. Usage report was not created.\n")
+  } else{
+    # retrieve reports from instrument_usage function
+    epicalcium_reports <- instrument_usage(epicalcium_df, epicalcium_price_list)
+    # export report
+    export_reports(epicalcium_reports, epicalcium_savename)
+  }# end else
 }# end if
 
 # Zeiss Epi Instrument
 if (file_test("-f", zeissepi_file)){
   # read csv file
-  zeissepi_data_df <- read.csv(file=zeissepi_file, header=TRUE, stringsAsFactors=FALSE)
+  zeissepi_df <- read.csv(file=zeissepi_file, header=TRUE, stringsAsFactors=FALSE)
   # preprocessing dataframe
-  zeissepi_data_df <- dataframe_preprocessing(zeissepi_data_df)
-  # retrieve reports from instrument_usage function
-  zeissepi_reports <- instrument_usage(zeissepi_data_df, zeissepi_price_list)
-  # export report
-  export_reports(zeissepi_reports, zeissepi_savename)
+  zeissepi_df <- dataframe_preprocessing(zeissepi_df)
+  # check if dataframe is empty
+  if (empty(zeissepi_df)){cat("\n", names(zeissepi_df)[1], 
+                              " has no data. Usage report was not created.\n")
+  } else{
+    # retrieve reports from instrument_usage function
+    zeissepi_reports <- instrument_usage(zeissepi_df, zeissepi_price_list)
+    # export report
+    export_reports(zeissepi_reports, zeissepi_savename)
+  }# end else
 }# end if
