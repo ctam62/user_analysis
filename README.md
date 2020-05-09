@@ -1,9 +1,9 @@
-# Microscopy Instrument Usage Tracking\par
+## Microscopy Instrument Usage Tracking
 
-## Input
+** Input **
 This code will extract data from an .csv file containing a log of user usage for a microscopy instrument.
 
-## Output
+** Output **
 A compiled usage and payment report will be generated in an excel file.
 
 The usage report contains the number of users, task performed per user, summed cost per task, and number of hours spent for each task. 
