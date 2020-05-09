@@ -1,10 +1,10 @@
-## Microscopy Instrument Usage Tracking in R
+# Microscopy Instrument Usage Tracking in R
 
-**Input**
+# Input
 
 This code will extract data from an .csv file containing a log of user usage for a microscopy instrument.
 
-**Output**
+# Output
 
 A compiled usage and payment report will be generated in an excel file.
 
