@@ -121,79 +121,74 @@ instrument_usage <- function(data_df, price_list){
   
   if(names(data_df)[1] == "Confocal"){
     # Confocal instrument usage report
+    df_first_column <- data_df$Confocal
     
-    # extract supversior and instrument columns  
-    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "Confocal", "Price"))
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% data_df$Confocal){
-        # extract data for Confocal
-        temp <-subset(data_df, Confocal == names(price_list)[item])
+      if (names(price_list[item]) %in% df_first_column){
+        # extract data for Instrument
+        temp <- subset(data_df, Confocal == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    # create usage_report dataframe with hours
-    temp_report$Hours <- usage_hours
-    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Confocal, data=temp_report, sum)
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + Confocal
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + Confocal
+    report_col_names <- c("Supervisor", "Fullname", "Confocal", "Price")
+  
+  }else if (names(data_df)[1] == "EpiCalcium"){
+    # EpiCalcium instrument usage report  
+    df_first_column <- data_df$EpiCalcium
     
-    # create user_report
-    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + Confocal, data=temp_report, sum)
-  }# end if 
-  else if (names(data_df)[1] == "EpiCalcium"){
-    # EpiCalcium instrument usage report
-    
-    # extract supversior and instrument columns  
-    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "EpiCalcium", "Price"))  
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% data_df$EpiCalcium){
-        # extract data for EpiCalcium
-        temp <-subset(data_df, EpiCalcium == names(price_list)[item])
+      if (names(price_list[item]) %in% df_first_column){
+        # extract data for Instrument
+        temp <- subset(data_df, EpiCalcium == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    # create usage_report dataframe with hours
-    temp_report$Hours <- usage_hours
-    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + EpiCalcium, data=temp_report, sum)
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + EpiCalcium
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + EpiCalcium
+    report_col_names <- c("Supervisor", "Fullname", "EpiCalcium", "Price")
     
-    # create user_report
-    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + EpiCalcium, data=temp_report, sum)
-  }# end else if
-  else if(names(data_df)[1] == "ZeissEpi"){
+  }else if(names(data_df)[1] == "ZeissEpi"){
     # ZeissEpi instrument usage report
-      
-    # extract supversior and instrument columns  
-    temp_report <- subset(data_df, select=c("Supervisor", "Fullname", "ZeissEpi", "Price")) 
+    df_first_column <- data_df$ZeissEpi
+    
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-      
     for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% data_df$ZeissEpi){
-        # extract data for ZeissEpi
-        temp <-subset(data_df, ZeissEpi == names(price_list)[item])
+      if (names(price_list[item]) %in% df_first_column){
+        # extract data for Instrument
+        temp <- subset(data_df, ZeissEpi == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    # create usage_report dataframe with hours
-    temp_report$Hours <- usage_hours
-    usage_report <- aggregate(cbind(Price, Hours) ~ Supervisor + ZeissEpi, data=temp_report, sum)
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + ZeissEpi
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + ZeissEpi
+    report_col_names <- c("Supervisor", "Fullname", "ZeissEpi", "Price")
+  }
+  
+  # extract supversior and instrument columns  
+  temp_report <- subset(data_df, select=report_col_names)
     
-    # create user_report
-    user_report <- aggregate(cbind(Price, Hours) ~ Supervisor + Fullname + ZeissEpi, data=temp_report, sum)
-  }# end else if
+  # create usage_report dataframe with hours
+  temp_report$Hours <- usage_hours
+  usage_report <- aggregate(usage_formula, data=temp_report, sum)
+    
+  # create user_report
+  user_report <- aggregate(user_formula, data=temp_report, sum)
     
   # calculate total price for each supervisor
   payment_report <- aggregate(Price ~ Supervisor, data=data_df, sum)
