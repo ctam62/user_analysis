@@ -2,11 +2,11 @@
 
 # Input
 
-This code will extract data from .csv files containing a log of user usage for a microscopy instrument. Ths script is designed to batch process all .csv files in the working directory.
+This code will extract data from .csv files containing a log of user usage for a microscopy instrument. The script is designed to batch process all .csv files in the working directory.
 
 # Output
 
-A compiled usage and payment report will be generated in an excel file.
+A compiled usage, user, and payment report will be generated in a single excel workbook file for each month available.
 
 The usage report contains the number of users grouped by supervisor, task performed per user, summed cost per task, and number of hours spent for each task. 
 The user report contains the number of users grouped by supervisor, the individual user's name, task performed per user, summed cost per task, and number of hours spent for each task.
