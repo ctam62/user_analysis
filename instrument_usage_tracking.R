@@ -1,5 +1,5 @@
 "
-Microscopy Instrument Usage Tracking
+Microscopy Instrument Monthly Usage Tracking
 
 Written by Clara Tam
 Copyright (c) 2020
@@ -15,55 +15,65 @@ cat("Your working directory is set to:", working_dir, "\n")
 setwd(working_dir)
 
 #--------------------------------------------------------------------------------
-# Define the input arguments
+# Import required library packages
 #--------------------------------------------------------------------------------
-# specify date of reports
-date <-"2020-2"
+library(plyr)
+library(stringr)
+library(openxlsx)
+library(data.table)
+library(lubridate)
 
-# csv files to import
-confocal_file <- paste(date, "Confocal.csv")
-epicalcium_file <- paste(date, "Epi&Calcium.csv")
-zeissepi_file <- paste(date, "Zeiss_Epi.csv")
+#--------------------------------------------------------------------------------
+# Import files
+#--------------------------------------------------------------------------------
+# batch import csv files
+csv_files = list.files(pattern="*.csv")
 
-# output filename
-output_dir <- file.path(working_dir, paste0(date,"_reports"))
-if (!dir.exists(output_dir)){dir.create(output_dir)}
-
-confocal_savename <- paste0(output_dir,"/", date, "_Confocal", "_usage_report", ".xlsx")
-epicalcium_savename <- paste0(output_dir, "/", date, "_EpiCalcium", "_usage_report", ".xlsx")
-zeissepi_savename <- paste0(output_dir, "/", date, "_ZeissEpi", "_usage_report", ".xlsx")
-
+#--------------------------------------------------------------------------------
 # Microscopy Fees (Update as necessary)
+#--------------------------------------------------------------------------------
 confocal_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 50, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50,
+  "UofM Training" = 75,
   "UofM User" = 75,
-  "External" = 150)
+  "UofM Full Service" = 50,
+  "External Training" = 150,
+  "External User" = 150,
+  "External Full Service" = 75
+  )
 
 epicalcium_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 25, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50,
+  "UofM Training" = 75,
   "UofM User" = 30,
-  "External" = 60)
+  "UofM Full Service" = 50,
+  "External Training" = 150,
+  "External User" = 60,
+  "External Full Service" = 75
+  )
 
 zeissepi_price_list <- c(
   "CHRIM Training" = 75, 
   "CHRIM User" = 25, 
   "Data Analysis" = 0, 
   "CHRIM Full Service" = 50,
+  "UofM Training" = 75,
   "UofM User" = 30,
-  "External" = 60)
-#--------------------------------------------------------------------------------
+  "UofM Full Service" = 50,
+  "External Training" = 150,
+  "External User" = 60,
+  "External Full Service" = 75
+  )
 
-# import required library packages
-library(plyr)
-library(stringr)
-library(openxlsx)
-library(lubridate)
+price_list <- list("Confocal" = confocal_price_list, 
+                   "Epi&Calcium" = epicalcium_price_list,
+                   "Zeiss_Epi" = zeissepi_price_list)
 
 #--------------------------------------------------------------------------------
 # Functions
@@ -207,11 +217,11 @@ export_reports <- function(reports, savename){
   savename -- string, of shape (1, 1)
   "
   # convert individual reports back to dataframes
-  usage_report <- data.frame(reports[1])
+  usage_report <- data.frame(reports[1], stringsAsFactors=FALSE)
   usage_report <- usage_report[order(usage_report[,1]),] # sort df by supervisor
-  user_report <- data.frame(reports[2])
+  user_report <- data.frame(reports[2], stringsAsFactors=FALSE)
   user_report <- user_report[order(user_report[,1]),] # sort df by supervisor
-  payment_report <- data.frame(reports[3])
+  payment_report <- data.frame(reports[3], stringsAsFactors=FALSE)
   
   # export reports
   wb <- createWorkbook()
@@ -230,57 +240,30 @@ export_reports <- function(reports, savename){
 #--------------------------------------------------------------------------------
 # Main Script
 #--------------------------------------------------------------------------------
+# batch read csv files
+csv_data = lapply(csv_files,fread)
 
-# check if csv files to import exists
-# generate report if files exist
+# obtain dates and instrument names
+dates <- gsub("[A-z.& ]", "", csv_files)
+instruments <- gsub("[0-9 -]|+.csv", "", csv_files)
 
-# Conofocal Instrument
-if (file_test("-f", confocal_file)){
-  # read csv file
-  confocal_df <- read.csv(file=confocal_file, header=TRUE, stringsAsFactors=FALSE)
-  # preprocessing dataframe
-  confocal_df <- dataframe_preprocessing(confocal_df)
+for(item in 1:length(csv_files)){
+  # batch generate output directory and filenames
+  output_dir <- file.path(working_dir, paste0(dates[item],"_reports"))
+  if (!dir.exists(output_dir)){dir.create(output_dir)}
+  savename <- paste0(output_dir, "/", dates[item], "_", instruments[item],"_usage_report.xlsx")
+  
+  # batch process and generate reports
+  imported_df <- data.frame(csv_data[item], stringsAsFactors=FALSE)
+  preprocessed_df <- dataframe_preprocessing(imported_df)
   # check if dataframe is empty
-  if (empty(confocal_df)){cat("\n", names(confocal_df)[1], 
-                              " has no data. Usage report was not created\n")
-    } else{
-    # retrieve reports from instrument_usage function
-    confocal_reports <- instrument_usage(confocal_df, confocal_price_list)
-    # export report
-    export_reports(confocal_reports, confocal_savename)
-  }# end else
-}# end if
-
-# Epi & Calcium Instrument
-if (file_test("-f", epicalcium_file)){
-  # read csv file
-  epicalcium_df <- read.csv(file=epicalcium_file, header=TRUE, stringsAsFactors=FALSE)
-  # preprocessing dataframe
-  epicalcium_df <- dataframe_preprocessing(epicalcium_df)
-  # check if dataframe is empty
-  if (empty(epicalcium_df)){cat("\n", names(epicalcium_df)[1], 
-                                " has no data. Usage report was not created.\n")
-  } else{
-    # retrieve reports from instrument_usage function
-    epicalcium_reports <- instrument_usage(epicalcium_df, epicalcium_price_list)
-    # export report
-    export_reports(epicalcium_reports, epicalcium_savename)
-  }# end else
-}# end if
-
-# Zeiss Epi Instrument
-if (file_test("-f", zeissepi_file)){
-  # read csv file
-  zeissepi_df <- read.csv(file=zeissepi_file, header=TRUE, stringsAsFactors=FALSE)
-  # preprocessing dataframe
-  zeissepi_df <- dataframe_preprocessing(zeissepi_df)
-  # check if dataframe is empty
-  if (empty(zeissepi_df)){cat("\n", names(zeissepi_df)[1], 
+  if (empty(preprocessed_df)){cat("\n", names(preprocessed_df)[1], 
                               " has no data. Usage report was not created.\n")
   } else{
     # retrieve reports from instrument_usage function
-    zeissepi_reports <- instrument_usage(zeissepi_df, zeissepi_price_list)
+    index <- match(instruments[item], names(price_list))
+    instrument_reports <- instrument_usage(preprocessed_df, price_list[[index]])
     # export report
-    export_reports(zeissepi_reports, zeissepi_savename)
+    export_reports(instrument_reports, savename)
   }# end else
-}# end if
+}# end for
