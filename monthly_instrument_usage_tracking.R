@@ -7,21 +7,22 @@ Licensed under the MIT License (see LICENSE for details)
 
 "
 #--------------------------------------------------------------------------------
-# Setup working environment
-#--------------------------------------------------------------------------------
-# Set working directory
-working_dir <- getwd()
-cat("Your working directory is set to:", working_dir, "\n")
-setwd(working_dir)
-
-#--------------------------------------------------------------------------------
 # Import required library packages
 #--------------------------------------------------------------------------------
+library(rstudioapi)
 library(plyr)
 library(stringr)
 library(openxlsx)
 library(data.table)
 library(lubridate)
+
+#--------------------------------------------------------------------------------
+# Setup working environment
+#--------------------------------------------------------------------------------
+# Set working directory
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+working_dir <- getwd()
+cat("Your working directory is set to:", working_dir, "\n")
 
 #--------------------------------------------------------------------------------
 # Import files
