@@ -1,8 +1,8 @@
-# Microscopy Instrument Monthly Usage Tracking in R
+# Instrument Monthly Usage Tracking in R
 
 # Input
 
-This code will extract data from .csv files containing a log of user usage for a microscopy instrument. The script is designed to batch process all .csv files in the working directory.
+This code will extract data from .csv files obtained from a SAS database containing a log of user usage for an instrument. The script is designed to batch process all .csv files in the working directory.
 
 # Output
 
@@ -13,4 +13,4 @@ The user report contains the number of users grouped by supervisor, the individu
 The payment report contains the total summed cost for each user.
 
 The repository includes:
-* Source code of the Microscopy Instrument Usage Tracking written in R.
+* Source code of the Instrument Usage Tracking written in R.
