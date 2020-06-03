@@ -1,5 +1,5 @@
 "
-Microscopy Instrument Monthly Usage Tracking
+Monthly Instrument Usage Tracking
 
 Written by Clara Tam
 Copyright (c) 2020
@@ -31,50 +31,41 @@ cat("Your working directory is set to:", working_dir, "\n")
 csv_files = list.files(pattern="*.csv")
 
 #--------------------------------------------------------------------------------
-# Microscopy Fees (Update as necessary)
+# Instrument Fees (Update as necessary)
 #--------------------------------------------------------------------------------
-confocal_price_list <- c(
-  "CHRIM Training" = 75, 
-  "CHRIM User" = 50, 
+instrumentA_price_list <- c(
+  "Training" = 75, 
+  "User" = 50, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50,
-  "UofM Training" = 75,
-  "UofM User" = 75,
-  "UofM Full Service" = 50,
+  "Full Service" = 50,
   "External Training" = 150,
   "External User" = 150,
   "External Full Service" = 75
   )
 
-epicalcium_price_list <- c(
-  "CHRIM Training" = 75, 
-  "CHRIM User" = 25, 
+instrumentB_price_list <- c(
+  "Training" = 75, 
+  "User" = 25, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50,
-  "UofM Training" = 75,
-  "UofM User" = 30,
-  "UofM Full Service" = 50,
+  "Full Service" = 50,
   "External Training" = 150,
   "External User" = 60,
   "External Full Service" = 75
   )
 
-zeissepi_price_list <- c(
-  "CHRIM Training" = 75, 
-  "CHRIM User" = 25, 
+instrumentC_price_list <- c(
+  "Training" = 75, 
+  "User" = 25, 
   "Data Analysis" = 0, 
-  "CHRIM Full Service" = 50,
-  "UofM Training" = 75,
-  "UofM User" = 30,
-  "UofM Full Service" = 50,
+  "Full Service" = 50,
   "External Training" = 150,
   "External User" = 60,
   "External Full Service" = 75
   )
 
-price_list <- list("Confocal" = confocal_price_list, 
-                   "Epi&Calcium" = epicalcium_price_list,
-                   "Zeiss_Epi" = zeissepi_price_list)
+price_list <- list("Instrument_A" = instrumentA_price_list, 
+                   "Instrument_B" = instrumentB_price_list,
+                   "Instrument_C" = instrumentC_price_list)
 
 #--------------------------------------------------------------------------------
 # Functions
@@ -130,9 +121,9 @@ instrument_usage <- function(data_df, price_list){
   payment_report -- dataframe, of shape (num_obs, 2)
   "
   
-  if(names(data_df)[1] == "Confocal"){
+  if(names(data_df)[1] == "InstrumentA"){
     # Confocal instrument usage report
-    df_first_column <- data_df$Confocal
+    df_first_column <- data_df$InstrumentA
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
@@ -140,19 +131,19 @@ instrument_usage <- function(data_df, price_list){
     for (item in 1:length(price_list)){
       if (names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
-        temp <- subset(data_df, Confocal == names(price_list)[item])
+        temp <- subset(data_df, InstrumentA == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    usage_formula <- cbind(Price, Hours) ~ Supervisor + Confocal
-    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + Confocal
-    report_col_names <- c("Supervisor", "Fullname", "Confocal", "Price")
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + InstrumentA
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + InstrumentA
+    report_col_names <- c("Supervisor", "Fullname", "InstrumentA", "Price")
   
-  }else if (names(data_df)[1] == "EpiCalcium"){
+  }else if (names(data_df)[1] == "InstrumentB"){
     # EpiCalcium instrument usage report  
-    df_first_column <- data_df$EpiCalcium
+    df_first_column <- data_df$InstrumentB
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
@@ -160,19 +151,19 @@ instrument_usage <- function(data_df, price_list){
     for (item in 1:length(price_list)){
       if (names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
-        temp <- subset(data_df, EpiCalcium == names(price_list)[item])
+        temp <- subset(data_df, InstrumentB == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    usage_formula <- cbind(Price, Hours) ~ Supervisor + EpiCalcium
-    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + EpiCalcium
-    report_col_names <- c("Supervisor", "Fullname", "EpiCalcium", "Price")
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + InstrumentB
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + InstrumentB
+    report_col_names <- c("Supervisor", "Fullname", "InstrumentB", "Price")
     
-  }else if(names(data_df)[1] == "ZeissEpi"){
+  }else if(names(data_df)[1] == "InstrumentC"){
     # ZeissEpi instrument usage report
-    df_first_column <- data_df$ZeissEpi
+    df_first_column <- data_df$InstrumentC
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
@@ -180,15 +171,15 @@ instrument_usage <- function(data_df, price_list){
     for (item in 1:length(price_list)){
       if (names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
-        temp <- subset(data_df, ZeissEpi == names(price_list)[item])
+        temp <- subset(data_df, InstrumentC == names(price_list)[item])
         num_hours <- compute_timespent(temp)
         usage_hours <- append(usage_hours, num_hours, after=length(usage_hours))
       }# end if
     }# end for
     
-    usage_formula <- cbind(Price, Hours) ~ Supervisor + ZeissEpi
-    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + ZeissEpi
-    report_col_names <- c("Supervisor", "Fullname", "ZeissEpi", "Price")
+    usage_formula <- cbind(Price, Hours) ~ Supervisor + InstrumentC
+    user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + InstrumentC
+    report_col_names <- c("Supervisor", "Fullname", "InstrumentC", "Price")
   }
   
   # extract supversior and instrument columns  
