@@ -1,4 +1,4 @@
-# Instrument Monthly Usage Tracking in R
+# Monthly Instrument Usage Tracking in R
 
 # Input
 
@@ -13,4 +13,4 @@ The user report contains the number of users grouped by supervisor, the individu
 The payment report contains the total summed cost for each user.
 
 The repository includes:
-* Source code of the Instrument Usage Tracking written in R.
+* Source code of the Monthly Instrument Usage Tracking written in R.
