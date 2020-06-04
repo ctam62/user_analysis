@@ -1,10 +1,10 @@
 # Monthly Instrument Usage Tracking in R
 
-# Input
+## Input
 
-This code will extract data from .csv files obtained from a SAS database containing a log of user usage for an instrument. The script is designed to batch process all .csv files in the working directory.
+This code is a template to extract data from .csv files obtained from a SAS database containing a log of user usage for an instrument. The script is designed to automatically batch process all .csv files in the data directory.
 
-# Output
+## Output
 
 A compiled usage, user, and payment report will be generated in a single excel workbook file for each month available.
 
@@ -14,3 +14,9 @@ The payment report contains the total summed cost for each user.
 
 The repository includes:
 * Source code of the Monthly Instrument Usage Tracking written in R.
+* Sample data to test 
+
+## Usage
+
+**CSV File Format**:
+The input files are named with the format "year-month instrument name". Run monthly_instrument_usage_tracking.R file to see the demo script output.
