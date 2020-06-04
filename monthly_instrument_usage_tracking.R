@@ -28,7 +28,8 @@ cat("Your working directory is set to:", working_dir, "\n")
 # Import files
 #--------------------------------------------------------------------------------
 # batch import csv files
-csv_files = list.files(pattern="*.csv")
+csv_files <- Sys.glob(paste0(working_dir,'/data/*.csv'))
+csv_file_names <- gsub(".*/", "", csv_files)
 
 #--------------------------------------------------------------------------------
 # Instrument Fees (Update as necessary)
@@ -233,14 +234,15 @@ export_reports <- function(reports, savename){
 # Main Script
 #--------------------------------------------------------------------------------
 # batch read csv files
-csv_data = lapply(csv_files,fread)
+csv_data = lapply(csv_files, fread)
 
 # obtain dates and instrument names
-dates <- gsub("[A-z.& ]", "", csv_files)
-instruments <- gsub("[0-9 -]|+.csv", "", csv_files)
+dates <- gsub("[A-z.&/: ]", "", csv_file_names)
+instruments <- gsub("[0-9 -]|+.csv", "", csv_file_names)
 
 for(item in 1:length(csv_files)){
   # batch generate output directory and filenames
+  cat("Generating reports for", instruments[item],"....")
   output_dir <- file.path(working_dir, paste0(dates[item],"_reports"))
   if (!dir.exists(output_dir)){dir.create(output_dir)}
   savename <- paste0(output_dir, "/", dates[item], "_", instruments[item],"_usage_report.xlsx")
