@@ -19,4 +19,6 @@ The repository includes:
 ## Usage
 
 **CSV File Format**:
-The input files are named with the format "year-month instrument name". Run monthly_instrument_usage_tracking.R file to see the demo script output.
+The input files are named with the format "year-month instrument name". 
+
+Run monthly_instrument_usage_tracking.R file to see the demo script output.
