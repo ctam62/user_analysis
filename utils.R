@@ -51,7 +51,7 @@ instrument_usage <- function(data_df, price_list){
   
   Arguments:
   data_df -- input data frame, of shape (num_obs, num_variables)
-  price_list -- named atomic vector type numeric, of shape (1, 3)
+  price_list -- named atomic vector type numeric, of shape (1, num_instruments)
   
   Return:
   usage_report -- data frame, of shape (num_obs, 4)
@@ -59,14 +59,14 @@ instrument_usage <- function(data_df, price_list){
   "
   
   if(names(data_df)[1] == "InstrumentA"){
-    # Confocal instrument usage report
+    # InstrumentA instrument usage report
     df_first_column <- data_df$InstrumentA
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% df_first_column){
+    for(item in 1:length(price_list)){
+      if(names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
         temp <- subset(data_df, InstrumentA == names(price_list)[item])
         num_hours <- compute_timespent(temp)
@@ -78,15 +78,15 @@ instrument_usage <- function(data_df, price_list){
     user_formula <- cbind(Price, Hours) ~ Supervisor + Fullname + InstrumentA
     report_col_names <- c("Supervisor", "Fullname", "InstrumentA", "Price")
     
-  }else if (names(data_df)[1] == "InstrumentB"){
-    # EpiCalcium instrument usage report  
+  }else if(names(data_df)[1] == "InstrumentB"){
+    # InstrumentB instrument usage report  
     df_first_column <- data_df$InstrumentB
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% df_first_column){
+    for(item in 1:length(price_list)){
+      if(names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
         temp <- subset(data_df, InstrumentB == names(price_list)[item])
         num_hours <- compute_timespent(temp)
@@ -99,14 +99,14 @@ instrument_usage <- function(data_df, price_list){
     report_col_names <- c("Supervisor", "Fullname", "InstrumentB", "Price")
     
   }else if(names(data_df)[1] == "InstrumentC"){
-    # ZeissEpi instrument usage report
+    # InstrumentC instrument usage report
     df_first_column <- data_df$InstrumentC
     
     # calculate the number of hours spent per task
     # preallocate usage_hours vector
     usage_hours <- c()
-    for (item in 1:length(price_list)){
-      if (names(price_list[item]) %in% df_first_column){
+    for(item in 1:length(price_list)){
+      if(names(price_list[item]) %in% df_first_column){
         # extract data for Instrument
         temp <- subset(data_df, InstrumentC == names(price_list)[item])
         num_hours <- compute_timespent(temp)
@@ -119,7 +119,7 @@ instrument_usage <- function(data_df, price_list){
     report_col_names <- c("Supervisor", "Fullname", "InstrumentC", "Price")
   }
   
-  # extract supversior and instrument columns  
+  # extract supervisor and instrument columns  
   temp_report <- subset(data_df, select=report_col_names)
   
   # create usage_report data frame with hours
@@ -143,7 +143,7 @@ export_reports <- function(reports, savename){
   Export reports to an excel workbook
   
   Arguments:
-  reports -- list, of shape (2, 1)
+  reports -- list, of shape (3, 1)
   savename -- string, of shape (1, 1)
   "
   # convert individual reports back to data frames
