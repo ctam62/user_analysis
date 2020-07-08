@@ -11,7 +11,6 @@ Licensed under the MIT License (see LICENSE for details)
 #--------------------------------------------------------------------------------
 import::from(rstudioapi, getActiveDocumentContext)
 import::from(data.table, fread)
-import::from(lubridate, hm)
 library(plyr)
 library(stringr)
 library(modules)
