@@ -8,10 +8,13 @@ This program was written in R and requires the following library packages:
 
 ```
 rstudioapi
-lubridate
 data.table
+plyr
 stringr
 modules
+stats
+openxlsx
+lubridate
 ```
 
 ## Expected Output
