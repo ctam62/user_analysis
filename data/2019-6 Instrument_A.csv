@@ -1,13 +1,13 @@
 Instrument A,Start time,Finish time,Created by,Updated by,Full name,Phone,Supervisor,Lab Location,Created on,Updated on,Price
-Training,2019-06-04 10:30,2019-06-04 13:00,administrator,administrator,Audra Petersen,1-149-974-8902,Dr. Iris Burris,LMMI Rm 556-L,2019-06-04 18:42,2019-06-04 18:42,125
-User,2019-06-06 13:00,2019-06-06 14:00,urielle.wildern@lobortisquis.edu,,Urielle Wilder,1-529-149-5113,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-06 0:28,2019-06-06 0:28,20
-User,2019-06-06 11:00,2019-06-06 12:00,neque.sed@ornare.org,,Halee Espinoza,1-407-256-2472,Dr. Jane Lawrence,MRHC Rm 600-10,2019-06-06 16:04,2019-06-06 16:04,20
-User,2019-06-06 13:00,2019-06-06 15:00,Curabitur.sed@Etiambibendum.co.uk,,Kadeem Holden,1-444-332-9462,Dr. Seth Rowland,ARGJ Rm 641-04,2019-06-06 18:26,2019-06-06 18:26,40
-User,2019-06-07 13:00,2019-06-07 15:00,ut.dolor.dapibus@urnaUttincidunt.edu,,Lev Fry,1-490-292-1262,Dr. Erin Romero,VFRT Rm 605-04,2019-06-07 6:18,2019-06-07 6:18,40
-User,2019-06-09 10:00,2019-06-09 11:00,dolor.egestas@eueratsemper.net,,Idola Barber,1-582-112-6247,Dr. Kylan Kirkland,LOGJ Rm 631-10,2019-06-09 4:47,2019-06-09 4:47,20
-User,2019-06-10 10:00,2019-06-10 12:00,lectus@purus.net,,Maggie Baker,1-411-222-7820,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-10 14:58,2019-06-10 14:58,40
-User,2019-06-10 9:30,2019-06-10 10:30,Quisque.porttitor.eros@cursuspurus.edu,,Ocean Carter,1-543-971-8218,Dr. Seth Rowland,ARGJ Rm 641-04,2019-06-10 23:24,2019-06-10 23:24,20
-User,2019-06-11 16:05,2019-06-11 17:05,Cras.dolor@et.net,,Dennis Frank,1-870-623-7857,Dr. Rhea Charles,QIGN 641-H,2019-06-11 6:35,2019-06-11 6:35,20
-User,2019-06-11 9:00,2019-06-11 10:00,eu@consequat.net,,Dorian Walker,1-691-238-0607,Dr. Rhea Charles,QIGN 641-H,2019-06-11 18:40,2019-06-11 18:40,20
-User,2019-06-13 10:00,2019-06-13 11:00,eu.erat.semper@dictummagna.ca,,Larissa Rivera,1-848-804-8138,Dr. Kylan Kirkland,LOGJ Rm 631-10,2019-06-13 14:54,2019-06-13 14:54,20
-User,2019-06-14 14:00,2019-06-14 15:00,ante.ipsum@eratvelpede.com,,Frances Clark,1-609-371-1334,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-14 12:56,2019-06-14 12:56,20
+Training,2019-06-04 10:30,2019-06-04 13:00,administrator,administrator,Audra Petersen,1-149-974-8902,Dr. Iris Burris,LMMI Rm 556-L,2019-06-04 18:42,2019-06-04 18:42,262.5
+User,2019-06-06 13:00,2019-06-06 14:00,urielle.wildern@lobortisquis.edu,,Urielle Wilder,1-529-149-5113,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-06 0:28,2019-06-06 0:28,50
+User,2019-06-06 11:00,2019-06-06 12:00,neque.sed@ornare.org,,Halee Espinoza,1-407-256-2472,Dr. Jane Lawrence,MRHC Rm 600-10,2019-06-06 16:04,2019-06-06 16:04,50
+User,2019-06-06 13:00,2019-06-06 15:00,Curabitur.sed@Etiambibendum.co.uk,,Kadeem Holden,1-444-332-9462,Dr. Seth Rowland,ARGJ Rm 641-04,2019-06-06 18:26,2019-06-06 18:26,100
+User,2019-06-07 13:00,2019-06-07 15:00,ut.dolor.dapibus@urnaUttincidunt.edu,,Lev Fry,1-490-292-1262,Dr. Erin Romero,VFRT Rm 605-04,2019-06-07 6:18,2019-06-07 6:18,100
+User,2019-06-09 10:00,2019-06-09 11:00,dolor.egestas@eueratsemper.net,,Idola Barber,1-582-112-6247,Dr. Kylan Kirkland,LOGJ Rm 631-10,2019-06-09 4:47,2019-06-09 4:47,50
+User,2019-06-10 10:00,2019-06-10 12:00,lectus@purus.net,,Maggie Baker,1-411-222-7820,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-10 14:58,2019-06-10 14:58,100
+User,2019-06-10 9:30,2019-06-10 10:30,Quisque.porttitor.eros@cursuspurus.edu,,Ocean Carter,1-543-971-8218,Dr. Seth Rowland,ARGJ Rm 641-04,2019-06-10 23:24,2019-06-10 23:24,50
+User,2019-06-11 16:05,2019-06-11 17:05,Cras.dolor@et.net,,Dennis Frank,1-870-623-7857,Dr. Rhea Charles,QIGN 641-H,2019-06-11 6:35,2019-06-11 6:35,50
+User,2019-06-11 9:00,2019-06-11 10:00,eu@consequat.net,,Dorian Walker,1-691-238-0607,Dr. Rhea Charles,QIGN 641-H,2019-06-11 18:40,2019-06-11 18:40,50
+User,2019-06-13 10:00,2019-06-13 11:00,eu.erat.semper@dictummagna.ca,,Larissa Rivera,1-848-804-8138,Dr. Kylan Kirkland,LOGJ Rm 631-10,2019-06-13 14:54,2019-06-13 14:54,50
+User,2019-06-14 14:00,2019-06-14 15:00,ante.ipsum@eratvelpede.com,,Frances Clark,1-609-371-1334,Dr. Clare Holcomb,HJYR Rm 650-10,2019-06-14 12:56,2019-06-14 12:56,50
