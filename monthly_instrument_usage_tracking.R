@@ -87,7 +87,7 @@ for(item in 1:length(csv_files)){
   # generate output directory and filenames
   cat("Generating reports for", instruments[item],"....")
   output_dir <- file.path(working_dir, paste0(dates[item],"_reports"))
-  if (!dir.exists(output_dir)){dir.create(output_dir)}
+  if(!dir.exists(output_dir)){dir.create(output_dir)}
   savename <- paste0(output_dir, "/", dates[item], "_", instruments[item],"_usage_report.xlsx")
   
   # generate reports
@@ -96,7 +96,7 @@ for(item in 1:length(csv_files)){
   # check if data frame is empty
   if (empty(preprocessed_df)){cat("\n", names(preprocessed_df)[1], 
                               " has no data. Usage report was not created.\n")
-  } else{
+  }else{
     # retrieve reports from instrument_usage function
     index <- match(instruments[item], names(price_list))
     instrument_reports <- utils$instrument_usage(preprocessed_df, price_list[[index]])
