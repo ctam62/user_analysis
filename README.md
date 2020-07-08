@@ -4,7 +4,7 @@ This code extracts data from .csv files obtained from a SAS database containing 
 
 ## Required Packages
 
-This program was written in R and requires the following library packages:
+This program was written in R version 4.0.0 and requires the following library packages:
 
 ```
 rstudioapi
